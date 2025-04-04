@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - IDAR DARJI SAMAJ</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      background-color: #f3f4f6;
+    }
+
+    nav {
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #menuBtn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #1f2937;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #1f2937;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 260px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 50;
+      padding: 24px;
+    }
+
+    .sidebar.active {
+      transform: translateX(0);
+    }
+
+    .profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile img {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .profile h2 {
+      font-size: 0.9rem;
+      color: #1f2937;
+      font-weight: 600;
+    }
+
+    .profile p {
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .btn-group {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      font-size: 1rem;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn-blue {
+      background-color: #2563eb;
+    }
+
+    .btn-blue:hover {
+      background-color: #1d4ed8;
+    }
+
+    .btn-yellow {
+      background-color: #f59e0b;
+    }
+
+    .btn-yellow:hover {
+      background-color: #d97706;
+    }
+
+    .btn-green {
+      background-color: #16a34a;
+    }
+
+    .btn-green:hover {
+      background-color: #15803d;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.3);
+      z-index: 40;
+      display: none;
+    }
+
+    #overlay.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <!-- Hamburger -->
+    <button id="menuBtn">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2"
+        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+
+    <!-- Center title -->
+    <h1>IDAR DARJI SAMAJ</h1>
+
+    <!-- Spacer -->
+    <div style="width: 32px; height: 32px;"></div>
+  </nav>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <div class="profile">
+      <!-- Profile Image -->
+      <img src="https://via.placeholder.com/100" alt="Profile"/>
+
+      <!-- Email from localStorage -->
+      <h2 id="userEmail">Loading...</h2>
+
+      <!-- Village from localStorage -->
+      <p id="userVillage">Loading...</p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-group">
+      <button class="btn btn-blue">About Us</button>
+      <button class="btn btn-yellow">Notification</button>
+      <button class="btn btn-green">Feedback</button>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div id="overlay"></div>
+
+  <!-- Script -->
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const email = localStorage.getItem('email') || 'Email not found';
+      const village = localStorage.getItem('village') || 'Village not found';
+
+      document.getElementById('userEmail').innerText = email;
+      document.getElementById('userVillage').innerText = village;
+    });
+  </script>
+
+</body>
+</html>
