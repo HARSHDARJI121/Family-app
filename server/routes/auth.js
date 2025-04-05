@@ -2,6 +2,8 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db'); // Import the MySQL connection
+const { v4: uuidv4 } = require('uuid'); // For generating unique reset tokens
+const nodemailer = require('nodemailer'); // For sending emails
 
 const router = express.Router();
 
@@ -104,22 +106,42 @@ router.post('/forgot-password', async (req, res) => {
     // Check if the user exists
     const [user] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
     if (user.length === 0) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res.status(404).json({ success: false, message: 'No user found with that email' });
     }
 
-    // Generate a temporary reset token (for simplicity, using a random string here)
-    const resetToken = Math.random().toString(36).substring(2, 15);
+    // Generate a password reset token
+    const resetToken = uuidv4();
 
     // Save the reset token in the database (you can also set an expiration time)
     await db.query('UPDATE users SET reset_token = ? WHERE email = ?', [resetToken, email]);
 
-    // Send the reset token to the user's email (mocked here)
-    console.log(`Reset token for ${email}: ${resetToken}`);
+    // Create a password reset link
+    const resetLink = `http://localhost:3000/reset-password.html?token=${resetToken}`;
 
-    res.status(200).json({ success: true, message: 'Password reset instructions have been sent to your email.' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: 'Server error' });
+    // Configure the email transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail', // Use your email provider
+      auth: {
+        user: 'darjiharsh2005@gmail.com', // Your email
+        pass: 'harsh12', // Your email password or app password
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: 'your-email@gmail.com',
+      to: email,
+      subject: 'Password Reset Request',
+      text: `Hello,\n\nYou requested to reset your password. Click the link below to reset it:\n\n${resetLink}\n\nIf you did not request this, please ignore this email.`,
+    };
+
+    // Send the email
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ success: true, message: 'Reset link sent to your email!' });
+  } catch (error) {
+    console.error('Error in forgot-password route:', error);
+    res.status(500).json({ success: false, message: 'Error sending reset link. Please try again.' });
   }
 });
 

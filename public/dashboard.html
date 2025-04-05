@@ -13,7 +13,8 @@
 
     body {
       font-family: sans-serif;
-      background-color: #f3f4f6;
+      background: -webkit-linear-gradient(left, #d7d7ac,#9ebe86,#bc79b6, #cb8f57);
+      
     }
 
     nav {
@@ -133,6 +134,63 @@
     #overlay.active {
       display: block;
     }
+     /* New CSS for the 4 boxes */
+.boxes-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px auto;
+  padding: 10px;
+  max-width: 1200px;
+  flex-wrap: wrap; /* This allows the boxes to wrap on smaller screens */
+}
+
+.box {
+  background-color: #fff;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+  width: 48%; /* Default width for 2 boxes in a row */
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+  margin-bottom: 20px; /* Add space between boxes in smaller screens */
+  margin-left: 6px;
+}
+
+.box img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.box:hover {
+  transform: translateY(-5px);
+}
+
+.box h3 {
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+/* Media Query for Medium Screens (e.g., tablets) */
+@media (max-width: 1024px) {
+  .box {
+    width: 48%; /* 2 boxes in a row on medium screens */
+  }
+}
+
+/* Media Query for Small Screens (e.g., mobile phones) */
+@media (max-width: 768px) {
+  .box {
+    width: 48%; /* 2 boxes in a row on small screens */
+  }
+
+  .boxes-container {
+    justify-content: center; /* Center the boxes on small screens */
+  }
+}
+
   </style>
 </head>
 <body>
@@ -158,6 +216,31 @@
     <h2 style="text-align: center; margin-top: 20px;">Welcome to the Idar Darji Samaj</h2>
   </div>
 
+  <!-- Boxes Container -->
+  <div class="boxes-container">
+    <!-- Birthday Box -->
+    <div class="box">
+      <img src="https://artprojectsforkids.org/wp-content/uploads/2021/06/Happy-Birthday-Cake.jpeg" alt="Birthday"/>
+      <h3>Birthday</h3>
+    </div>
+    <!-- Address Box -->
+    <div class="box">
+      <img src="https://i.pinimg.com/736x/4a/24/14/4a2414e8d912d269ddb8a55b3de2c00b.jpg" alt="Address"/>
+      <h3>Address</h3>
+    </div>
+    <!-- Search Box -->
+    <div class="box">
+      <img src="https://img.freepik.com/free-photo/search-icon-front-side-white-background_187299-40205.jpg" alt="Search"/>
+      <h3>Search</h3>
+    </div>
+    <!-- Obituary Box -->
+    <div class="box">
+      <img src="https://deniseleeyohn.com/wp-content/uploads/2010/02/tombstone-clipart.gif" alt="Obituary"/>
+      <h3>Obituary</h3>
+    </div>
+  </div>
+
+
   <!-- Sidebar -->
   <div id="sidebar" class="sidebar">
     <div class="profile">
@@ -177,7 +260,7 @@
       <button class="btn btn-yellow">Notification</button>
       <button class="btn btn-green">Feedback</button>
       <!-- Logout Button -->
-      <button id="logoutBtn" class="btn btn-red">Logout</button>
+      <button id="logoutBtn" style="background-color: red; color: white;" class="btn btn-red">Logout</button>
     </div>
   </div>
   <!-- Overlay -->

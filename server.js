@@ -37,7 +37,8 @@ db.getConnection((err, connection) => {
 });
 
 // Routes
-app.use('/api/auth', require('./server/routes/auth')); // Authentication routes
+const authRoutes = require('./server/routes/auth'); // Adjust the path as needed
+app.use('/api', authRoutes); // Register the routes under the `/api` prefix
 
 // Serve frontend
 app.get('/', (req, res) => {
