@@ -38,28 +38,66 @@ router.post('/signup', async (req, res) => {
   });
 
   //login route
-router.post('/login', async (req, res) => {
+  router.post('/login', async (req, res) => {
     const { email, password, number } = req.body;
   
     try {
+      // Check if the user exists with the provided email and number
       const [user] = await db.query('SELECT * FROM users WHERE email = ? AND number = ?', [email, number]);
       if (user.length === 0) {
         return res.status(404).json({ success: false, message: 'User not found or number does not match' });
       }
   
+      // Compare the password
       const isMatch = await bcrypt.compare(password, user[0].password);
       if (!isMatch) {
         return res.status(400).json({ success: false, message: 'Invalid credentials' });
       }
   
-    //   Optional: generate token
-    //   const token = jwt.sign({ id: user[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      // Store user info in session
+      req.session.user = {
+        email: user[0].email,
+        village: user[0].village,
+      };
   
-      res.status(200).json({ success: true, message: 'Login successful' });
+      // Send success response with email and village
+      res.status(200).json({
+        success: true,
+        message: 'Login successful',
+        email: user[0].email,
+        village: user[0].village,
+      });
     } catch (err) {
       console.error(err);
       res.status(500).json({ success: false, message: 'Server error' });
     }
   });
+  
+// Forgot Password Route
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Check if the user exists
+    const [user] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    if (user.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Generate a temporary reset token (for simplicity, using a random string here)
+    const resetToken = Math.random().toString(36).substring(2, 15);
+
+    // Save the reset token in the database (you can also set an expiration time)
+    await db.query('UPDATE users SET reset_token = ? WHERE email = ?', [resetToken, email]);
+
+    // Send the reset token to the user's email (mocked here)
+    console.log(`Reset token for ${email}: ${resetToken}`);
+
+    res.status(200).json({ success: true, message: 'Password reset instructions have been sent to your email.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
 
 module.exports = router;

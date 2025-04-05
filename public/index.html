@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auth App</title>
     <style>
          @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
@@ -246,7 +245,7 @@ form .btn input[type="submit"]{
               <div class="field">
                 <input type="text" name="number" placeholder="Mobile Number" required>
               </div>
-              <div class="pass-link"><a href="#">Forgot password?</a></div>
+              <div id="forgotPasswordMessage" class="message"><a href="#" id="forgotPasswordLink">Forgot password?</a></div>
               <div class="field btn">
                 <div class="btn-layer"></div>
                 <input type="submit" value="Login">
@@ -254,6 +253,9 @@ form .btn input[type="submit"]{
               </div>
               <div class="signup-link">Not a member? <a href="">Signup now</a></div>
             </form>
+
+
+
             <form id="signupForm" class="signup">
                 <div class="field">
                   <input type="text" name="email" placeholder="Email Address" required>
@@ -359,30 +361,29 @@ form .btn input[type="submit"]{
       const res = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       const result = await res.json();
 
       if (result.success) {
-        // Optional message
-        loginMessage.textContent = result.message;
-        loginMessage.style.color = 'green';
+        // Store email and village in localStorage
+        localStorage.setItem('email', result.email);
+        localStorage.setItem('village', result.village);
 
-        // Redirect after short delay
-        setTimeout(() => {
-          window.location.href = 'dashboard.html';
-        }, 1000);
+        // Redirect to dashboard
+        window.location.href = 'dashboard.html';
       } else {
         loginMessage.textContent = result.message;
         loginMessage.style.color = 'red';
       }
     } catch (error) {
-      loginMessage.textContent = 'Something went wrong';
+      console.error('Error:', error);
+      loginMessage.textContent = 'Something went wrong.';
       loginMessage.style.color = 'red';
-      console.error(error);
     }
   });
-</script>
+
+  </script>

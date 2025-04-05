@@ -154,6 +154,9 @@
     <!-- Spacer -->
     <div style="width: 32px; height: 32px;"></div>
   </nav>
+  <div>
+    <h2 style="text-align: center; margin-top: 20px;">Welcome to the Dashboard</h2>
+  </div>
 
   <!-- Sidebar -->
   <div id="sidebar" class="sidebar">
@@ -185,6 +188,7 @@
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
 
+    // Toggle sidebar and overlay
     menuBtn.addEventListener('click', () => {
       sidebar.classList.toggle('active');
       overlay.classList.toggle('active');
@@ -195,13 +199,32 @@
       overlay.classList.remove('active');
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const email = localStorage.getItem('email') || 'Email not found';
-      const village = localStorage.getItem('village') || 'Village not found';
+    async function fetchUserProfile() {
+      try {
+        const response = await fetch('/api/profile');
+        if (response.ok) {
+          const data = await response.json();
 
-      document.getElementById('userEmail').innerText = email;
-      document.getElementById('userVillage').innerText = village;
-    });
+          // Populate the sidebar with user data
+          document.getElementById('userEmail').textContent = `Email: ${data.email}`;
+          document.getElementById('userVillage').textContent = `Village: ${data.village}`;
+        } else {
+          // Handle errors, such as user not being logged in
+          document.getElementById('userEmail').textContent = 'Not logged in';
+          document.getElementById('userVillage').textContent = 'Please log in to see your profile.';
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        document.getElementById('userEmail').textContent = 'Error fetching profile';
+        document.getElementById('userVillage').textContent = 'Please try again later.';
+      }
+    }
+
+    // Call the function to fetch user profile when the page loads
+    fetchUserProfile();
+
+  
+
   </script>
 
 </body>
