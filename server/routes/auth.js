@@ -72,6 +72,29 @@ router.post('/signup', async (req, res) => {
       res.status(500).json({ success: false, message: 'Server error' });
     }
   });
+
+  // Logout route
+// Ensure this route is properly defined
+router.post('/api/auth/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Failed to log out' });
+    }
+    res.status(200).json({ message: 'Logged out successfully' });
+  });
+});
+
+router.post('/logout', (req, res) => {
+  // Destroy the session
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: 'Failed to log out' });
+    }
+    // Send a success response
+    res.status(200).json({ success: true, message: 'Logged out successfully' });
+  });
+});
+
   
 // Forgot Password Route
 router.post('/forgot-password', async (req, res) => {

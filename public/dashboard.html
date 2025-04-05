@@ -155,7 +155,7 @@
     <div style="width: 32px; height: 32px;"></div>
   </nav>
   <div>
-    <h2 style="text-align: center; margin-top: 20px;">Welcome to the Dashboard</h2>
+    <h2 style="text-align: center; margin-top: 20px;">Welcome to the Idar Darji Samaj</h2>
   </div>
 
   <!-- Sidebar -->
@@ -176,17 +176,19 @@
       <button class="btn btn-blue">About Us</button>
       <button class="btn btn-yellow">Notification</button>
       <button class="btn btn-green">Feedback</button>
+      <!-- Logout Button -->
+      <button id="logoutBtn" class="btn btn-red">Logout</button>
     </div>
   </div>
-
   <!-- Overlay -->
   <div id="overlay"></div>
 
   <!-- Script -->
   <script>
-    const menuBtn = document.getElementById('menuBtn');
+     const menuBtn = document.getElementById('menuBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
+    const logoutBtn = document.getElementById('logoutBtn');
 
     // Toggle sidebar and overlay
     menuBtn.addEventListener('click', () => {
@@ -199,6 +201,35 @@
       overlay.classList.remove('active');
     });
 
+    // Logout function
+    async function logoutUser() {
+      try {
+        const response = await fetch('/api/auth/logout', {
+          method: 'POST', // Ensure it's a POST request to destroy the session
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          // Clear localStorage
+          localStorage.removeItem('email');
+          localStorage.removeItem('village');
+
+          // Redirect to login page
+          window.location.href = 'index.html'; // Ensure login.html exists in the public folder
+        } else {
+          console.error('Logout failed:', await response.json());
+        }
+      } catch (error) {
+        console.error('Error logging out:', error);
+      }
+    }
+
+    // Attach logout function to logout button
+    document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+
+    // Fetch user profile on page load
     async function fetchUserProfile() {
       try {
         const response = await fetch('/api/profile');
@@ -222,7 +253,6 @@
 
     // Call the function to fetch user profile when the page loads
     fetchUserProfile();
-
   
 
   </script>
